@@ -69,6 +69,19 @@ async def init_db():
             await db.execute("ALTER TABLE tickets ADD COLUMN sla_reminded_at TEXT")
         if "last_reminder_at" not in column_names:
             await db.execute("ALTER TABLE tickets ADD COLUMN last_reminder_at TEXT")
+        for column in ("telegram_username", "phone_number"):
+            if column not in column_names:
+                await db.execute(f"ALTER TABLE tickets ADD COLUMN {column} TEXT")
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS user_profiles (
+                user_id INTEGER PRIMARY KEY,
+                full_name TEXT NOT NULL,
+                telegram_username TEXT,
+                phone_number TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+        """)
         await db.execute("""
             INSERT OR IGNORE INTO ticket_attachments (ticket_id, file_id, position, created_at)
             SELECT id, photo_file_id, 0, COALESCE(created_at, ?)
@@ -90,7 +103,8 @@ def _now():
 
 async def create_ticket(
     user_id, user_name, department, category, description,
-    photo_file_id=None, photo_file_ids=None,
+    photo_file_id=None, photo_file_ids=None, telegram_username=None,
+    phone_number=None,
 ):
     now = _now()
     photo_ids = list(photo_file_ids or [])
@@ -99,11 +113,12 @@ async def create_ticket(
     first_photo_id = photo_ids[0] if photo_ids else photo_file_id
     async with aiosqlite.connect(DB_PATH) as db:
         cursor = await db.execute("""
-            INSERT INTO tickets (user_id, user_name, department, category, description,
-                                  photo_file_id, status, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (user_id, user_name, department, category, description, first_photo_id,
-              STATUS_NEW, now, now))
+            INSERT INTO tickets (user_id, user_name, telegram_username, phone_number,
+                                  department, category, description, photo_file_id,
+                                  status, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (user_id, user_name, telegram_username, phone_number, department, category,
+              description, first_photo_id, STATUS_NEW, now, now))
         ticket_id = cursor.lastrowid
         for position, file_id in enumerate(photo_ids):
             await db.execute("""
@@ -118,6 +133,30 @@ async def create_ticket(
             )
         await db.commit()
         return ticket_id
+
+
+async def get_user_profile(user_id):
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute("SELECT * FROM user_profiles WHERE user_id = ?", (user_id,))
+        row = await cursor.fetchone()
+        return dict(row) if row else None
+
+
+async def save_user_profile(user_id, full_name, telegram_username, phone_number):
+    now = _now()
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute("""
+            INSERT INTO user_profiles
+                (user_id, full_name, telegram_username, phone_number, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(user_id) DO UPDATE SET
+                full_name = excluded.full_name,
+                telegram_username = excluded.telegram_username,
+                phone_number = excluded.phone_number,
+                updated_at = excluded.updated_at
+        """, (user_id, full_name, telegram_username, phone_number, now, now))
+        await db.commit()
 
 
 async def add_attachment(ticket_id, file_id, position=None):
