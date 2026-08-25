@@ -88,6 +88,8 @@ Konsolda `Bot ishga tushdi.` yozuvi chiqsa — hammasi tayyor. Endi Telegram'da 
 - IT: guruhda tugmalar orqali `Menga tayinla` / `Jarayonda` / `Bajarildi` / `Bekor qilish` / `Izoh qo'shish` / `Qayta ochish`
 - `Bajarildi` bosilganda tayyor shablon yoki o'z izohingizni yozasiz — shu izoh xodimga ham yuboriladi
 - Xodim: `/mening_murojaatlarim` — o'z murojaatlari ro'yxati va holati
+- Birinchi `/start` paytida ism-familiya va telefon raqami olinadi; `/profil` orqali ism-familiya va telefonni yangilash mumkin.
+- Murojaatlarda Telegram ID, username va telefon raqami saqlanadi; `/export` hisobotida ham ko'rsatiladi.
 - IT: `/statistika` — umumiy raqamlar; `/export` — to'liq Excel hisobot
 - Bot har 5 daqiqada 2 soatdan ortiq `Yangi` murojaatlar uchun guruhga SLA eslatmasi yuboradi.
 - Har kuni soat 18:00 da kunlik murojaatlar va yopilgan murojaatlar xulosasi yuboriladi.
