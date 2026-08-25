@@ -6,13 +6,13 @@ Bu yerdagi qiymatlarni o'zingizga moslab to'ldiring.
 import os
 
 # 1) BotFather'dan olingan token
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "8900343596:AAEGSqies1kr_Ft-6o0CqR0Kfma-hS6nMM0")
 
 # 2) IT bo'limi guruhining Telegram ID raqami.
 #    Qanday topish mumkin: botni guruhga qo'shing, guruhda biror xabar yozing,
 #    keyin @getidsbot yoki @userinfobot orqali guruh ID sini oling.
-#    Guruh ID odatda manfiy son bo'ladi, masalan: -1001234567890
-IT_GROUP_ID = int(os.getenv("IT_GROUP_ID", "0"))
+#    Guruh ID odatda manfiy son bo'ladi, masalan: -1003980700296
+IT_GROUP_ID = int(os.getenv("IT_GROUP_ID", "-1003980700296"))
 
 # SLA chegarasi (soatlarda)
 SLA_HOURS = 2
@@ -25,7 +25,7 @@ USER_CANCEL_WINDOW_MINUTES = 10
 #    O'z Telegram ID ingizni bilish uchun @userinfobot ga /start yozing.
 IT_STAFF_IDS = [
     int(value.strip())
-    for value in os.getenv("IT_STAFF_IDS", "").split(",")
+    for value in os.getenv("IT_STAFF_IDS", "1082310069,6648643276").split(",")
     if value.strip()
 ]
 
