@@ -36,6 +36,10 @@ async def show_ticket_preview(message: Message, state: FSMContext):
 
 @router.message(Command("murojaat"))
 async def cmd_new_ticket(message: Message, state: FSMContext):
+    profile = await db.get_user_profile(message.from_user.id)
+    if not profile:
+        await message.answer("Avval /start orqali ro'yxatdan o'ting.")
+        return
     await message.answer("Qaysi bo'limdansiz?", reply_markup=department_keyboard())
     await state.set_state(NewTicket.department)
 
@@ -94,6 +98,8 @@ async def cb_send_ticket(callback: CallbackQuery, state: FSMContext):
         category=data["category"],
         description=data["description"],
         photo_file_ids=data.get("photo_ids", []),
+        telegram_username=callback.from_user.username,
+        phone_number=(await db.get_user_profile(callback.from_user.id))["phone_number"],
     )
     if data.get("comment"):
         await db.add_comment(ticket_id, callback.from_user.full_name, data["comment"])
