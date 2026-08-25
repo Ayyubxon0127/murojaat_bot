@@ -68,3 +68,19 @@ QUICK_RESOLUTIONS = [
 
 # 7) Ma'lumotlar bazasi fayli nomi (shu papkada yaratiladi)
 DB_PATH = "tickets.db"
+
+
+def validate():
+    missing = []
+    if not BOT_TOKEN:
+        missing.append("BOT_TOKEN")
+    if not IT_GROUP_ID:
+        missing.append("IT_GROUP_ID")
+    if not IT_STAFF_IDS:
+        missing.append("IT_STAFF_IDS")
+    if missing:
+        raise RuntimeError(
+            "Quyidagi environment variable'lar sozlanmagan: "
+            + ", ".join(missing)
+            + ". .env.example asosida sozlang."
+        )
