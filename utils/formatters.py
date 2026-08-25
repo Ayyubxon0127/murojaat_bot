@@ -20,6 +20,9 @@ def ticket_summary_text(ticket: dict, comments=None) -> str:
     lines = [
         f"🎫 <b>Murojaat #{ticket['id']}</b> — {status_label}",
         f"👤 Xodim: {ticket['user_name']}",
+        f"🆔 Telegram: @{ticket['telegram_username']}" if ticket.get("telegram_username") else
+        f"🆔 Telegram ID: {ticket['user_id']}",
+        f"📞 Telefon: {ticket['phone_number']}" if ticket.get("phone_number") else "",
         f"🏢 Bo'lim: {ticket['department']}",
         f"📂 Muammo turi: {ticket['category']}",
         f"📝 Tavsif: {ticket['description']}",
