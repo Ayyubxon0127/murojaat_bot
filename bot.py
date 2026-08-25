@@ -75,6 +75,7 @@ def build_dispatcher() -> Dispatcher:
 
 
 async def main():
+    config.validate()
     await db.init_db()
     bot = Bot(token=config.BOT_TOKEN)
     await setup_bot_commands(bot)
