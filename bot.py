@@ -8,9 +8,10 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
+from aiogram.dispatcher.event.bases import UNHANDLED
 from aiogram.exceptions import TelegramNetworkError, TelegramBadRequest
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import BotCommand, BotCommandScopeChat, BotCommandScopeDefault
+from aiogram.types import BotCommand, BotCommandScopeChat, BotCommandScopeDefault, ErrorEvent
 
 import config
 import db
@@ -52,6 +53,17 @@ async def setup_bot_commands(bot: Bot):
 
 def build_dispatcher() -> Dispatcher:
     dispatcher = Dispatcher(storage=MemoryStorage())
+
+    @dispatcher.errors.register
+    async def handle_errors(event: ErrorEvent):
+        if (
+            isinstance(event.exception, TelegramBadRequest)
+            and "query is too old" in str(event.exception).lower()
+        ):
+            logging.warning("Eskirgan callback so'rovi e'tiborsiz qoldirildi.")
+            return True
+        return UNHANDLED
+
     dispatcher.include_router(start.router)
     dispatcher.include_router(ticket.router)
     dispatcher.include_router(photo.router)
