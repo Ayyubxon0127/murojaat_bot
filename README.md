@@ -72,6 +72,20 @@ PyCharm terminalida (yoki oddiy terminalda, loyiha papkasida):
 pip install -r requirements.txt
 ```
 
+Environment variable'larni sozlash:
+
+PowerShell:
+
+```powershell
+$env:BOT_TOKEN="BotFather tokeni"
+$env:IT_GROUP_ID="-1001234567890"
+$env:IT_STAFF_IDS="111111111,222222222"
+python bot.py
+```
+
+PyCharm'da **Run/Debug Configuration → Environment variables** bo'limiga
+`BOT_TOKEN`, `IT_GROUP_ID` va `IT_STAFF_IDS` ni qo'shing.
+
 ## 6. Ishga tushirish
 
 ```bash
