@@ -72,11 +72,11 @@ async def cb_done(callback: CallbackQuery):
         await callback.answer("Bu amal faqat IT xodimlari uchun.", show_alert=True)
         return
     ticket_id = extract_ticket_id(callback.data)
+    await callback.answer()
     await callback.message.answer(
         f"Murojaat #{ticket_id} uchun nima qilinganini tanlang yoki o'zingiz yozing:",
         reply_markup=quick_resolution_keyboard(ticket_id),
     )
-    await callback.answer()
 
 
 @router.callback_query(F.data.startswith("quickres:"))
