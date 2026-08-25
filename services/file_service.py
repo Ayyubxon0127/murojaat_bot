@@ -14,7 +14,8 @@ def build_export_file(tickets):
     ws.title = "Murojaatlar"
 
     headers = [
-        "№", "Sana", "Bo'lim", "Foydalanuvchi", "Muammo turi", "Tavsif",
+        "№", "Sana", "Foydalanuvchi", "Telegram username", "Telegram ID", "Telefon",
+        "Bo'lim", "Muammo turi", "Tavsif",
         "Holat", "Mas'ul", "Izoh (yechim)", "Yopilgan vaqt",
     ]
     ws.append(headers)
@@ -31,6 +32,9 @@ def build_export_file(tickets):
             ticket["created_at"],
             ticket["department"],
             ticket["user_name"],
+            ticket.get("telegram_username") or "",
+            ticket["user_id"],
+            ticket.get("phone_number") or "",
             ticket["category"],
             ticket["description"],
             status_labels.get(ticket["status"], ticket["status"]),
@@ -39,7 +43,7 @@ def build_export_file(tickets):
             ticket.get("closed_at") or "",
         ])
 
-    widths = [6, 18, 22, 22, 28, 40, 14, 20, 40, 18]
+    widths = [6, 18, 22, 22, 16, 18, 22, 28, 40, 14, 20, 40, 18]
     for i, width in enumerate(widths, start=1):
         ws.column_dimensions[ws.cell(row=1, column=i).column_letter].width = width
 
