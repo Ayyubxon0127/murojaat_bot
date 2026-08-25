@@ -22,3 +22,8 @@ class AddComment(StatesGroup):
 
 class UserComment(StatesGroup):
     waiting_comment = State()
+
+
+class Registration(StatesGroup):
+    full_name = State()
+    phone = State()
