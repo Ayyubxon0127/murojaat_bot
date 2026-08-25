@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 
 import config
 from utils.helpers import chunk_buttons
@@ -51,3 +51,11 @@ def back_preview_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="⬅️ Orqaga", callback_data="new:back_preview")],
     ])
+
+
+def phone_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="📱 Telefon raqamimni yuborish", request_contact=True)]],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
